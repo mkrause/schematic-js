@@ -1,13 +1,4 @@
 {
-    "compilerOptions": {
-        "outFile": "./build",
-        "target": "es6",
-        "module": "system",
-        "noImplicitAny": true,
-        "removeComments": false,
-        "preserveConstEnums": true,
-        "sourceMap": true,
-    },
     "exclude": [
         "node_modules",
         "**/*.spec.ts",
@@ -15,4 +6,15 @@
     "include": [
         "src/**/*"
     ],
+    "compilerOptions": {
+        "outFile": "./build",
+        "target": "es2017",
+        "module": "system",
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "noErrorTruncation": false,
+    },
 }

@@ -1,5 +1,7 @@
 
-const x: string = 42;
+namespace model {
+
+//const x: string = 42;
 
 const ObjectUtil = {
     mapEntries: () => {},
@@ -62,6 +64,41 @@ const model: Model = Object.assign(
     },
 );
 
+
+class Record implements ModelInterface {
+    value: { [propName: string]: Model };
+    
+    constructor(record: { [propName: string]: Model }) {
+        this.value = record;
+    }
+    
+    equals(other: any) {
+        return true;
+    }
+    
+    decode(instanceEncoded: any) {
+        return { left: "" };
+    }
+    encode(instance: Model) {
+        return {};
+    }
+    validate(instance: Model) {
+        return { left: "" };
+    }
+    
+    toJson(this: Model) {
+        return model.encode(this);
+    }
+}
+
+// const record: Model = Object.assign(
+//     function() {
+        
+//     },
+//     Record.prototype,
+// );
+
+
 const User = model({
     name: String,
 });
@@ -71,3 +108,5 @@ const john = User({
 });
 
 john.toJson().namex;
+
+};
