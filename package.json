@@ -1,0 +1,53 @@
+{
+    "name": "@mkrause/lifecycle-rest",
+    "version": "0.0.3",
+    "description": "Lifecycle REST API loader",
+    "author": "mkrause",
+    "license": "MIT",
+    "repository": "https://github.com/mkrause/lifecycle-rest",
+    "es2015": "src/index.js",
+    "main": "lib-cjs/index.js",
+    "module": "lib-esm/index.js",
+    "browser": "lib-esm/index.js",
+    "files": [
+        "src/",
+        "lib-cjs/",
+        "lib-esm/"
+    ],
+    "scripts": {
+        "check": "tsc --noEmit",
+        "build:cjs": "NODE_ENV=production BABEL_ENV=cjs babel src --out-dir lib-cjs --source-maps inline",
+        "build:esm": "NODE_ENV=production BABEL_ENV=esm babel src --out-dir lib-esm --source-maps inline",
+        "test": "NODE_ENV=development BABEL_ENV=cjs mocha --require @babel/register --recursive tests",
+        "prepare": "npm run build:esm && npm run build:cjs",
+        "prepublishOnly": "npm run build:esm && npm run build:cjs"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.1.2",
+        "@babel/cli": "^7.1.2",
+        "@babel/register": "^7.0.0",
+        "@babel/plugin-proposal-class-properties": "^7.1.0",
+        "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+        "babel-plugin-transform-builtin-extend": "^1.1.2",
+        "@babel/preset-env": "^7.1.0",
+        "@babel/preset-react": "^7.0.0",
+        "@babel/preset-typescript": "^7.1.0",
+        "mocha": "^5.2.0",
+        "chai": "^4.1.2",
+        "sinon": "^5.0.10"
+    },
+    "dependencies": {
+        "typescript": "^3.2.2",
+        "uuid": "^3.2.1",
+        "@mkrause/match": "^1.0.20",
+        "moment": "^2.22.1",
+        "lodash": "^4.17.5",
+        "immutable": "^4.0.0-rc.9",
+        "uri-tag": "^0.0.1",
+        "message-tag": "^0.2.1",
+        "object-merge-advanced": "^10.2.2",
+        "axios": "^0.18.0",
+        "@mkrause/lifecycle-loader": "^0.0.1",
+        "redux": "^4.0.0"
+    }
+}
