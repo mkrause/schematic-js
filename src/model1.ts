@@ -1,5 +1,6 @@
 
-namespace model {
+export {};
+
 
 //const x: string = 42;
 
@@ -65,7 +66,7 @@ const model: Model = Object.assign(
 );
 
 
-class Record implements ModelInterface {
+class _Record implements ModelInterface {
     value: { [propName: string]: Model };
     
     constructor(record: { [propName: string]: Model }) {
@@ -108,5 +109,3 @@ const john = User({
 });
 
 john.toJson().namex;
-
-};
