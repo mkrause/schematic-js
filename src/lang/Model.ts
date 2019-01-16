@@ -9,27 +9,41 @@ export type DecodingReport = string;
 export type ValidityReport = string;
 
 export interface ModelInterface {
+    tag : string;
+    
     equals(other : unknown) : boolean;
     
     decode(instanceEncoded : ModelEncoded) : either.Either<DecodingReport, Model>;
-    encode(instance : Model) : ModelEncoded;
+    // encode(instance : Model) : ModelEncoded;
     
-    validate(instance : Model) : either.Either<ValidityReport, Model>;
+    // validate(instance : Model) : either.Either<ValidityReport, Model>;
     
-    toJson() : unknown;
+    construct(instanceEncoded : ModelEncoded): Model;
+    
+    toJSON() : unknown;
 }
 
 export abstract class Model implements ModelInterface {
-    protected readonly value : ModelInternal;
+    protected readonly value : ModelInternal = null;
+    public readonly tag : string;
+    
+    constructor(...args : any[]) {
+        this.tag = this.constructor.name.toLowerCase();
+    }
     
     abstract equals(other : unknown) : boolean;
     
     abstract decode(instanceEncoded : ModelEncoded) : either.Either<DecodingReport, Model>;
-    abstract encode(instance : Model) : ModelEncoded;
+    // abstract encode(instance : Model) : ModelEncoded;
     
-    abstract validate(instance : Model) : either.Either<ValidityReport, Model>;
+    // abstract validate(instance : Model) : either.Either<ValidityReport, Model>;
     
-    abstract toJson() : unknown;
+    construct(instanceEncoded : ModelEncoded): Model {
+        return this.decode(instanceEncoded)
+            .getOrElseL((reason : ValidityReport) => { throw reason; });
+    }
+    
+    abstract toJSON() : unknown;
 }
 
 export default Model;

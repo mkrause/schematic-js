@@ -4,7 +4,8 @@
         "**/*.spec.ts",
     ],
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "typings"
     ],
     "compilerOptions": {
         // CLI config

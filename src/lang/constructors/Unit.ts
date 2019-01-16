@@ -2,10 +2,11 @@
 import * as ObjectUtil from '../../util/ObjectUtil.js';
 import { either } from 'fp-ts';
 
+import proxify from '../util/proxify.js';
 import * as Lang from '../Model.js';
 
 
-export default class Unit extends Lang.Model {
+export class Unit extends Lang.Model {
     equals(other : unknown) {
         return other instanceof Unit;
     }
@@ -31,5 +32,9 @@ export default class Unit extends Lang.Model {
     
     // validate(instance : Model) : either.Either<ValidityReport, Model> {}
     
-    // toJson() : unknown {}
+    toJSON() {
+        return {};
+    }
 }
+
+export default proxify(Unit);

@@ -1,21 +1,17 @@
 
 import $msg from 'message-tag';
+import * as ObjectUtil from '../../util/ObjectUtil.js';
 import { either } from 'fp-ts';
 
 import proxify from '../util/proxify.js';
 import * as Lang from '../Model.js';
 
+import Text from './Text.js';
 
-export class Text extends Lang.Model {
-    protected readonly value : string;
-    
-    constructor(text : string) {
-        super();
-        this.value = text;
-    }
-    
+
+export class Textual extends Lang.Model {
     equals(other : unknown) {
-        return other instanceof Text && other.value === this.value;
+        return other instanceof Textual;
     }
     
     
@@ -24,16 +20,12 @@ export class Text extends Lang.Model {
     //
     
     decode(instanceEncoded : Lang.ModelEncoded): either.Either<Lang.ValidityReport, Lang.Model> {
+        if (instanceEncoded instanceof Text) {
+            return either.right(instanceEncoded);
+        }
+        
         if (typeof instanceEncoded === 'string' || instanceEncoded instanceof String) {
-            const instanceString = String(instanceEncoded);
-            
-            if (instanceString !== this.value) {
-                return either.left(
-                    $msg`Invalid instance, expected ${this.value}, given ${instanceString}`
-                );
-            }
-            
-            return either.right(new Text(instanceString));
+            return either.right(new Text(String(instanceEncoded)));
         }
         
         return either.left($msg`Expected string, given ${instanceEncoded}`);
@@ -44,8 +36,8 @@ export class Text extends Lang.Model {
     // validate(instance : Model) : either.Either<ValidityReport, Model> {}
     
     toJSON() {
-        return this.value;
+        return { mu$kind: 'textual' };
     }
 }
 
-export default proxify(Text);
+export default proxify(Textual);

@@ -16,6 +16,7 @@
     ],
     "scripts": {
         "check": "tsc --noEmit",
+        "repl": "ts-node -O='{\"isolatedModules\":false,\"checkJs\":false,\"module\":\"commonjs\"}'",
         "build:cjs": "NODE_ENV=production BABEL_ENV=cjs babel src --out-dir lib-cjs --source-maps inline --extensions '.ts,.tsx'",
         "build:esm": "NODE_ENV=production BABEL_ENV=esm babel src --out-dir lib-esm --source-maps inline --extensions '.ts,.tsx'",
         "test": "NODE_ENV=development BABEL_ENV=cjs mocha --require @babel/register --recursive tests",
@@ -37,7 +38,10 @@
         "sinon": "^5.0.10"
     },
     "dependencies": {
+        "message-tag": "^0.2.1",
         "typescript": "^3.2.2",
+        "ts-node": "^7.0.1",
+        "@types/node": "^10.12.18",
         "fp-ts": "^1.12.3",
         "uuid": "^3.2.1",
         "@mkrause/match": "^1.0.20",
@@ -45,7 +49,6 @@
         "lodash": "^4.17.5",
         "immutable": "^4.0.0-rc.9",
         "uri-tag": "^0.0.1",
-        "message-tag": "^0.2.1",
         "object-merge-advanced": "^10.2.2",
         "axios": "^0.18.0",
         "@mkrause/lifecycle-loader": "^0.0.1",
