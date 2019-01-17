@@ -22,7 +22,7 @@ export class Model extends Lang.Model {
     // Transcoding
     //
     
-    decode(instanceEncoded : Lang.ModelEncoded): either.Either<Lang.ValidityReport, Lang.Model> {
+    decode(instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
         if (instanceEncoded instanceof Lang.Model) {
             return either.right(instanceEncoded);
         }
@@ -64,4 +64,5 @@ export class Model extends Lang.Model {
     }
 }
 
-export default proxify(Model);
+//export default proxify(Model);
+export default Model;

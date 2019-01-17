@@ -60,7 +60,7 @@ export class Struct extends Lang.Model {
             ({} as StructProps)
         );
         
-        return either.right(new _Struct(props));
+        return either.right(new Struct(props));
     }
     
     // encode(instance : Model) : ModelEncoded {}
@@ -78,6 +78,6 @@ export class Struct extends Lang.Model {
     }
 }
 
-const _Struct = proxify(Struct);
-
-export default _Struct;
+//const _Struct = proxify(Struct);
+//export default _Struct;
+export default Struct;

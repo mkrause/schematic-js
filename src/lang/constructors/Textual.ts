@@ -40,4 +40,5 @@ export class Textual extends Lang.Model {
     }
 }
 
-export default proxify(Textual);
+//export default proxify(Textual);
+export default Textual;

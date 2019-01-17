@@ -16,7 +16,7 @@ export class Unit extends Lang.Model {
     // Transcoding
     //
     
-    decode(instanceEncoded : Lang.ModelEncoded): either.Either<Lang.ValidityReport, Lang.Model> {
+    decode(instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
         if (instanceEncoded instanceof Unit) {
             return either.right(new Unit());
         }
@@ -37,4 +37,5 @@ export class Unit extends Lang.Model {
     }
 }
 
-export default proxify(Unit);
+//export default proxify(Unit);
+export default Unit;

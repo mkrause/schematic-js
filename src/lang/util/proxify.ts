@@ -81,4 +81,4 @@ export const proxifyClass = <Constructor extends ModelConstructor>(Constructor :
     };
 
 //export default proxifyClass;
-export default cls => cls;
+export default <T>(cls : T) => cls;
