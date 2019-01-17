@@ -40,7 +40,7 @@ export abstract class Model implements ModelInterface {
     
     construct(instanceEncoded : ModelEncoded): Model {
         return this.decode(instanceEncoded)
-            .getOrElseL((reason : ValidityReport) => { throw reason; });
+            .getOrElseL((reason : ValidityReport) => { throw new TypeError(reason); });
     }
     
     abstract toJSON() : unknown;

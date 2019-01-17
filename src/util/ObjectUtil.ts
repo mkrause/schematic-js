@@ -9,15 +9,8 @@ export const isPlainObject = (obj : unknown) : obj is object => {
 };
 
 export const keysEqual = (obj1 : Object, obj2 : Object) => {
-    const obj1Keys = Object.keys(obj1).sort();
-    const obj2Keys = Object.keys(obj2).sort();
-    
-    if (obj1Keys.length !== obj2Keys.length) {
-        return false;
-    }
-    
-    for (let i = 0; i < obj1Keys.length; i++) {
-        if (obj1Keys[i] !== obj2Keys[i]) {
+    for (const key of Object.keys(obj1)) {
+        if (!obj2.hasOwnProperty(key)) {
             return false;
         }
     }

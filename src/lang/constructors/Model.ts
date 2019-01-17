@@ -42,7 +42,7 @@ export class Model extends Lang.Model {
                 const props = Object.entries(instanceEncoded).reduce(
                     (acc, [propName, propEncoded]) => {
                         acc[propName] = Model.prototype.decode(propEncoded)
-                            .getOrElseL(() => { throw new TypeError($msg`Missing property ${propName}`); });
+                            .getOrElseL(() => { throw new TypeError($msg`Invalid property ${propName}`); });
                         return acc;
                     },
                     ({} as StructProps)

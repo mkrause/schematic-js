@@ -46,8 +46,11 @@ import * as Lang from '../Model.js';
 
 
 const proxifyInstance = (model : Lang.Model) : typeof model => {
+    const proxyFunction = (instanceEncoded : Lang.ModelEncoded) : Lang.Model => model.construct(instanceEncoded);
+    Object.defineProperty(proxyFunction, 'name', { value: model.constructor.name });
+    
     return <typeof model><unknown>new Proxy(
-        (instanceEncoded : Lang.ModelEncoded) : Lang.Model => model.construct(instanceEncoded),
+        proxyFunction,
         {
             get(target, prop : keyof typeof model) {
                 return model[prop];
