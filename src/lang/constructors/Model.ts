@@ -52,7 +52,7 @@ export class Model extends Lang.Model {
             }
         }
         
-        return either.left('Unrecognized model, given ${instanceEncoded}');
+        return either.left($msg`Unrecognized model, given ${instanceEncoded}`);
     }
     
     // encode(instance : Model) : ModelEncoded {}
