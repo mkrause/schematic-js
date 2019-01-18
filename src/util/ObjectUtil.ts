@@ -9,7 +9,14 @@ export const isPlainObject = (obj : unknown) : obj is object => {
 };
 
 export const keysEqual = (obj1 : Object, obj2 : Object) => {
-    for (const key of Object.keys(obj1)) {
+    const obj1Keys = Object.keys(obj1);
+    const obj2Keys = Object.keys(obj2);
+    
+    if (obj1Keys.length !== obj2Keys.length) {
+        return false;
+    }
+    
+    for (const key of obj1Keys) {
         if (!obj2.hasOwnProperty(key)) {
             return false;
         }

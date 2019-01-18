@@ -6,6 +6,7 @@ import Model from './lang/constructors/Model.js';
 import Unit from './lang/constructors/Unit.js';
 import Textual from './lang/constructors/Textual.js';
 import Text from './lang/constructors/Text.js';
+import Struct from './lang/constructors/Struct.js';
 
 
 const m = {
@@ -16,6 +17,7 @@ const m = {
         Unit,
         Textual,
         Text,
+        Struct,
     },
     
     // Shorthands
@@ -25,3 +27,13 @@ const m = {
 };
 
 export default m;
+
+
+
+
+
+import ImmEntity from './immutable/Entity.js';
+
+export const Imm = {
+    Entity: ImmEntity,
+};
