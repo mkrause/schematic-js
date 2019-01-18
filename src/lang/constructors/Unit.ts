@@ -32,6 +32,10 @@ export class Unit extends Lang.Model {
     
     // validate(instance : Model) : either.Either<ValidityReport, Model> {}
     
+    toJS() {
+        return {};
+    }
+    
     toJSON() {
         return {};
     }

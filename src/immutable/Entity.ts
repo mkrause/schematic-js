@@ -8,9 +8,18 @@ import * as Imm from 'immutable';
 import * as Lang from '../lang/Model.js';
 
 
-export default abstract class Entity<T> extends Lang.Model {
+interface RecordT {
+    [key : string] : Lang.Model;
+}
+
+export default abstract class Entity<T extends RecordT> extends Lang.Model {
     public readonly tag = 'immutable.entity';
-    protected readonly value : null | Imm.Record<T> = null;
+    protected readonly value : Imm.Record<T>;
+    
+    constructor(value : T) {
+        super();
+        this.value = Imm.Record(value)();
+    }
     
     equals(other : unknown) {
         return other instanceof Entity && false; // TODO
