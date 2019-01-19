@@ -31,6 +31,11 @@ export class Model extends Lang.Model {
             return either.right(new Textual());
         }
         
+        if (typeof instanceEncoded === 'function') {
+            const constructor = instanceEncoded as unknown as Lang.Model;
+            return either.right(constructor); // TODO
+        }
+        
         if (typeof instanceEncoded === 'string' || instanceEncoded instanceof String) {
             return either.right(new Text(String(instanceEncoded)));
         }
@@ -42,7 +47,9 @@ export class Model extends Lang.Model {
                 const props = Object.entries(instanceEncoded).reduce(
                     (acc, [propName, propEncoded]) => {
                         acc[propName] = Model.prototype.decode(propEncoded)
-                            .getOrElseL(() => { throw new TypeError($msg`Invalid property ${propName}`); });
+                            .getOrElseL(reason => {
+                                throw new TypeError($msg`Invalid property ${propName}: ${reason}`);
+                            });
                         return acc;
                     },
                     ({} as StructProps)
