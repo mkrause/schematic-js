@@ -1,6 +1,9 @@
 
+import util from 'util';
 import { either } from 'fp-ts';
 
+
+export type Reviver = (instanceEncoded : ModelEncoded) => void | Model;
 
 export type ModelEncoded = unknown;
 export type ModelInternal = unknown;
@@ -8,12 +11,12 @@ export type ModelInternal = unknown;
 export type DecodingReport = string;
 export type ValidityReport = string;
 
-export interface ModelInterface {
+export interface Model {
     tag : string;
     
     equals(other : unknown) : boolean;
     
-    decode(instanceEncoded : ModelEncoded) : either.Either<DecodingReport, Model>;
+    decode(instanceEncoded : ModelEncoded, reviver ?: Reviver) : either.Either<DecodingReport, Model>;
     // encode(instance : Model) : ModelEncoded;
     
     // validate(instance : Model) : either.Either<ValidityReport, Model>;
@@ -23,7 +26,9 @@ export interface ModelInterface {
     toJSON() : unknown;
 }
 
-export abstract class Model implements ModelInterface {
+export const Model = {};
+
+export abstract class BaseModel {
     readonly tag : string;
     readonly value : ModelInternal = null;
     
@@ -33,21 +38,24 @@ export abstract class Model implements ModelInterface {
     
     abstract equals(other : unknown) : boolean;
     
-    abstract decode(instanceEncoded : ModelEncoded) : either.Either<DecodingReport, Model>;
+    abstract decode(instanceEncoded : ModelEncoded, reviver ?: Reviver) : either.Either<DecodingReport, Model>;
     // abstract encode(instance : Model) : ModelEncoded;
     
     // abstract validate(instance : Model) : either.Either<ValidityReport, Model>;
     
-    construct(instanceEncoded : ModelEncoded) : Model {
-        return this.decode(instanceEncoded)
+    construct(instanceEncoded : ModelEncoded, reviver ?: Reviver) : Model {
+        return this.decode(instanceEncoded, reviver)
             .getOrElseL((reason : ValidityReport) => { throw new TypeError(reason); });
     }
     
     abstract toJSON() : unknown;
-    
-    [require('util').inspect.custom](depth : number) {
-        return `${this.tag} ${JSON.stringify(this.value)}`;
-    }
 }
 
-export default Model;
+if (util.inspect) {
+    // @ts-ignore
+    BaseModel.prototype[util.inspect.custom] = function() {
+        return `${this.tag} ${util.inspect(this.value)}`;
+    };
+}
+
+export default BaseModel;

@@ -5,6 +5,7 @@ import { either } from 'fp-ts';
 
 import proxify from '../util/proxify.js';
 import * as Lang from '../Model.js';
+import * as DecodingUtil from '../extensions/decoding.js';
 
 import Unit from './Unit.js';
 import Textual from './Textual.js';
@@ -12,55 +13,7 @@ import Text from './Text.js';
 import Struct, { StructProps } from './Struct.js';
 
 
-const makeConstructor = (cn : Function) : either.Either<Lang.ValidityReport, Lang.Model> => {
-    return either.right(class extends Lang.Model {
-        static readonly tag = cn.name;
-        static readonly value = null;
-        
-        static equals(other : unknown) { return other === cn; }
-        static construct(instanceEncoded : Lang.ModelEncoded) : Lang.Model {
-            return this.decode(instanceEncoded)
-                .getOrElseL((reason : Lang.ValidityReport) => { throw new TypeError(reason); });
-        }
-        static toJSON() { return null } // TODO
-        
-        static decode(instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
-            try {
-                return either.right(cn(instanceEncoded));
-            } catch (reason) {
-                return either.left(reason);
-            }
-        }
-        
-        
-        
-        readonly tag = `${cn.name}_instance`;
-        readonly value : unknown;
-        
-        constructor(value : unknown) {
-            super();
-            this.value = value;
-        }
-        
-        equals(other : unknown) {
-            return false; // TODO
-        }
-        
-        decode(instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
-            return either.left('TODO');
-        }
-        
-        // encode(instance : Model) : ModelEncoded {}
-        
-        // validate(instance : Model) : either.Either<ValidityReport, Model> {}
-        
-        toJSON() {
-            return 'TODO';
-        }
-    });
-};
-
-export class Model extends Lang.Model {
+export class Model extends Lang.BaseModel {
     equals(other : unknown) {
         return other instanceof Model;
     }
@@ -70,22 +23,16 @@ export class Model extends Lang.Model {
     // Transcoding
     //
     
-    decode(instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
-        if (instanceEncoded instanceof Lang.Model) {
-            return either.right(instanceEncoded);
+    decode(instanceEncoded : Lang.ModelEncoded, reviver ?: Lang.Reviver) : either.Either<Lang.DecodingReport, Lang.Model> {
+        if (reviver) {
+            const revived = DecodingUtil.revive(reviver, instanceEncoded);
+            if (revived) {
+                return revived;
+            }
         }
         
         if (instanceEncoded === String) {
             return either.right(new Textual());
-        }
-        
-        if (typeof instanceEncoded === 'function') {
-            if ('decode' in instanceEncoded) {
-                const constructor = instanceEncoded as unknown as Lang.Model;
-                return either.right(constructor); // TODO
-            } else {
-                return makeConstructor(instanceEncoded);
-            }
         }
         
         if (typeof instanceEncoded === 'string' || instanceEncoded instanceof String) {
@@ -98,7 +45,7 @@ export class Model extends Lang.Model {
             } else {
                 const props = Object.entries(instanceEncoded).reduce(
                     (acc, [propName, propEncoded]) => {
-                        acc[propName] = Model.prototype.decode(propEncoded)
+                        acc[propName] = Model.prototype.decode(propEncoded, reviver)
                             .getOrElseL(reason => {
                                 throw new TypeError($msg`Invalid property ${propName}: ${reason}`);
                             });
@@ -119,7 +66,7 @@ export class Model extends Lang.Model {
     // validate(instance : Model) : either.Either<ValidityReport, Model> {}
     
     toJSON() {
-        return { mu$kind: 'model' };
+        return { model$kind: 'model' };
     }
 }
 

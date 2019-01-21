@@ -5,11 +5,12 @@ import { either } from 'fp-ts';
 
 import proxify from '../util/proxify.js';
 import * as Lang from '../Model.js';
+import * as DecodingUtil from '../extensions/decoding.js';
 
 import Text from './Text.js';
 
 
-export class Textual extends Lang.Model {
+export class Textual extends Lang.BaseModel {
     equals(other : unknown) {
         return other instanceof Textual;
     }
@@ -19,7 +20,14 @@ export class Textual extends Lang.Model {
     // Transcoding
     //
     
-    decode(instanceEncoded : Lang.ModelEncoded): either.Either<Lang.ValidityReport, Lang.Model> {
+    decode(instanceEncoded : Lang.ModelEncoded, reviver ?: Lang.Reviver): either.Either<Lang.DecodingReport, Lang.Model> {
+        if (reviver) {
+            const revived = DecodingUtil.revive(reviver, instanceEncoded);
+            if (revived) {
+                return revived;
+            }
+        }
+        
         if (instanceEncoded instanceof Text) {
             return either.right(instanceEncoded);
         }
@@ -36,7 +44,7 @@ export class Textual extends Lang.Model {
     // validate(instance : Model) : either.Either<ValidityReport, Model> {}
     
     toJSON() {
-        return { mu$kind: 'textual' };
+        return { model$kind: 'textual' };
     }
 }
 

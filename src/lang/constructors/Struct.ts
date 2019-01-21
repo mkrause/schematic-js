@@ -5,13 +5,14 @@ import { either } from 'fp-ts';
 
 import proxify from '../util/proxify.js';
 import * as Lang from '../Model.js';
+import * as DecodingUtil from '../extensions/decoding.js';
 
 
 export interface StructProps {
     [key : string] : Lang.Model;
 }
 
-export class Struct<T extends StructProps> extends Lang.Model {
+export class Struct<T extends StructProps> extends Lang.BaseModel {
     readonly value : T;
     
     constructor(props : T) {
@@ -37,7 +38,14 @@ export class Struct<T extends StructProps> extends Lang.Model {
     // Transcoding
     //
     
-    decode(instanceEncoded : Lang.ModelEncoded): either.Either<Lang.ValidityReport, Lang.Model> {
+    decode(instanceEncoded : Lang.ModelEncoded, reviver ?: Lang.Reviver): either.Either<Lang.DecodingReport, Lang.Model> {
+        if (reviver) {
+            const revived = DecodingUtil.revive(reviver, instanceEncoded);
+            if (revived) {
+                return revived;
+            }
+        }
+        
         if (typeof instanceEncoded !== 'object' || instanceEncoded === null) {
             return either.left($msg`Expected object, given ${instanceEncoded}`);
         }

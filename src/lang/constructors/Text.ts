@@ -4,9 +4,10 @@ import { either } from 'fp-ts';
 
 import proxify from '../util/proxify.js';
 import * as Lang from '../Model.js';
+import * as DecodingUtil from '../extensions/decoding.js';
 
 
-export class Text extends Lang.Model {
+export class Text extends Lang.BaseModel {
     readonly value : string;
     
     constructor(text : string) {
@@ -23,7 +24,14 @@ export class Text extends Lang.Model {
     // Transcoding
     //
     
-    decode(instanceEncoded : Lang.ModelEncoded): either.Either<Lang.ValidityReport, Lang.Model> {
+    decode(instanceEncoded : Lang.ModelEncoded, reviver ?: Lang.Reviver): either.Either<Lang.DecodingReport, Lang.Model> {
+        if (reviver) {
+            const revived = DecodingUtil.revive(reviver, instanceEncoded);
+            if (revived) {
+                return revived;
+            }
+        }
+        
         if (typeof instanceEncoded === 'string' || instanceEncoded instanceof String) {
             const instanceString = String(instanceEncoded);
             

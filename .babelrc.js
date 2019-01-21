@@ -26,6 +26,9 @@ module.exports = {
         // https://github.com/babel/babel-loader/issues/195 (should be fixed in the latest version)
         // 'transform-runtime', // Needed to support generators
         
+        ['@babel/proposal-decorators', {
+            decoratorsBeforeExport: true,
+        }],
         '@babel/proposal-class-properties',
         '@babel/proposal-object-rest-spread',
         
