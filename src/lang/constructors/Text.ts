@@ -7,7 +7,7 @@ import * as Lang from '../Model.js';
 
 
 export class Text extends Lang.Model {
-    protected readonly value : string;
+    readonly value : string;
     
     constructor(text : string) {
         super();

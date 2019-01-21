@@ -24,8 +24,8 @@ export interface ModelInterface {
 }
 
 export abstract class Model implements ModelInterface {
-    public readonly tag : string;
-    protected readonly value : ModelInternal = null;
+    readonly tag : string;
+    readonly value : ModelInternal = null;
     
     constructor(...args : any[]) {
         this.tag = this.constructor.name.toLowerCase();

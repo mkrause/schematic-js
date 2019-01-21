@@ -7,6 +7,7 @@ import * as Imm from 'immutable';
 
 import * as Lang from '../lang/Model.js';
 import Model from '../lang/constructors/Model.js';
+import Struct from '../lang/constructors/Struct.js';
 
 
 interface RecordT {
@@ -14,7 +15,7 @@ interface RecordT {
 }
 
 type EntityStatic = Lang.Model & {
-    schema : unknown;
+    schema : { [propName : string] : Lang.ModelEncoded };
 };
 
 export default <EntityStatic>class Entity<T extends RecordT> extends Lang.Model {
@@ -28,10 +29,7 @@ export default <EntityStatic>class Entity<T extends RecordT> extends Lang.Model 
     }
     static toJSON() { return null } // TODO
     
-    static schema = null;
-    
-    public readonly tag = 'immutable.entity';
-    protected readonly value : Imm.Record<T>;
+    static schema = {};
     
     static decode(this : typeof Entity, instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
         if (!(this.prototype instanceof Entity)) {
@@ -42,10 +40,20 @@ export default <EntityStatic>class Entity<T extends RecordT> extends Lang.Model 
             .getOrElseL(reason => { throw new TypeError(reason); });
         
         return schema.decode(instanceEncoded)
-            .map((instance : Lang.Model) => new this(instance.toJSON() as RecordT));
-        // return schema.decode(instanceEncoded);
-    }    
+            .map((instance : Lang.Model) => {
+                // We assume the schema is a struct, and therefore expect the result to be a struct instance
+                if (!(instance instanceof Struct)) {
+                    throw new TypeError($msg`Expected struct, given ${instance}`);
+                }
+                
+                // Convert struct to entity instance
+                return new this(instance.value);
+            });
+    }
     
+    
+    readonly tag = 'immutable.entity';
+    readonly value : Imm.Record<T>;
     
     constructor(value : T) {
         super();

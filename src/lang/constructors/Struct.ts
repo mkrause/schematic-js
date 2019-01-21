@@ -7,12 +7,14 @@ import proxify from '../util/proxify.js';
 import * as Lang from '../Model.js';
 
 
-export type StructProps = { [propName : string] : Lang.Model };
+export interface StructProps {
+    [key : string] : Lang.Model;
+}
 
-export class Struct extends Lang.Model {
-    protected readonly value : StructProps;
+export class Struct<T extends StructProps> extends Lang.Model {
+    readonly value : T;
     
-    constructor(props : StructProps) {
+    constructor(props : T) {
         super();
         this.value = props;
     }
@@ -46,7 +48,7 @@ export class Struct extends Lang.Model {
             );
         }
         
-        const props : StructProps = Object.entries(instanceEncoded).reduce(
+        const props : T = Object.entries(instanceEncoded).reduce(
             (acc, [propName, propEncoded]) => {
                 const propResult = this.value[propName].decode(propEncoded);
                 if (propResult.isRight()) {
@@ -57,7 +59,7 @@ export class Struct extends Lang.Model {
                 
                 return acc;
             },
-            ({} as StructProps)
+            ({} as T)
         );
         
         return either.right(new Struct(props));
@@ -66,6 +68,10 @@ export class Struct extends Lang.Model {
     // encode(instance : Model) : ModelEncoded {}
     
     // validate(instance : Model) : either.Either<ValidityReport, Model> {}
+    
+    get(propName : keyof T) {
+        return this.value[propName];
+    }
     
     toJSON() {
         return Object.entries(this.value).reduce(
