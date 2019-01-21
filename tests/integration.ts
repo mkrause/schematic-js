@@ -28,6 +28,12 @@ describe('schematic', () => {
                     name: String,
                 });
                 
+                expect(() => {
+                    User.construct({
+                        name: 42,
+                    });
+                }).to.throw(TypeError);
+                
                 const alice = User.construct({
                     name: 'Alice',
                 });
