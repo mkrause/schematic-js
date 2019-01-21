@@ -36,7 +36,7 @@ export default m;
 
 import ImmEntity from './immutable/Entity.js';
 
-export const Imm = {
+export const Immutable = {
     Entity: ImmEntity,
 };
 

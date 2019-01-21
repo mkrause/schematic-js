@@ -54,6 +54,14 @@ export class Text extends Lang.BaseModel {
     toJSON() {
         return this.value;
     }
+    
+    [Symbol.toPrimitive](hint : string) {
+        if (hint === 'string') {
+            return this.value;
+        } else {
+            throw new TypeError($msg`Unsupported primitive type ${hint}`);
+        }
+    }
 }
 
 //export default proxify(Text);
