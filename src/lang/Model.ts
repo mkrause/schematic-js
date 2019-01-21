@@ -18,7 +18,7 @@ export interface ModelInterface {
     
     // validate(instance : Model) : either.Either<ValidityReport, Model>;
     
-    construct(instanceEncoded : ModelEncoded): Model;
+    construct(instanceEncoded : ModelEncoded) : Model;
     
     toJSON() : unknown;
 }
@@ -38,12 +38,16 @@ export abstract class Model implements ModelInterface {
     
     // abstract validate(instance : Model) : either.Either<ValidityReport, Model>;
     
-    construct(instanceEncoded : ModelEncoded): Model {
+    construct(instanceEncoded : ModelEncoded) : Model {
         return this.decode(instanceEncoded)
             .getOrElseL((reason : ValidityReport) => { throw new TypeError(reason); });
     }
     
     abstract toJSON() : unknown;
+    
+    [require('util').inspect.custom](depth : number) {
+        return `${this.tag} ${JSON.stringify(this.value)}`;
+    }
 }
 
 export default Model;

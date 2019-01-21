@@ -13,26 +13,38 @@ interface RecordT {
     [key : string] : Lang.Model;
 }
 
-interface EntityStatic {
+type EntityStatic = Lang.Model & {
     schema : unknown;
-}
+};
 
-export default abstract class Entity<T extends RecordT> extends Lang.Model {
+export default <EntityStatic>class Entity<T extends RecordT> extends Lang.Model {
+    static readonly tag = 'immutable.entity';
+    static readonly value = null;
+    
+    static equals(other : unknown) { return other === Entity; }
+    static construct(instanceEncoded : Lang.ModelEncoded) : Lang.Model {
+        return this.decode(instanceEncoded)
+            .getOrElseL((reason : Lang.ValidityReport) => { throw new TypeError(reason); });
+    }
+    static toJSON() { return null } // TODO
+    
+    static schema = null;
+    
     public readonly tag = 'immutable.entity';
     protected readonly value : Imm.Record<T>;
     
-    
-    static decode(instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
-        const self = this as unknown as EntityStatic;
+    static decode(this : typeof Entity, instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
+        if (!(this.prototype instanceof Entity)) {
+            throw new TypeError('Expected `this` to be bound to the Entity class');
+        }
         
-        const schema = new Model().decode(self.schema)
+        const schema = new Model().decode(this.schema)
             .getOrElseL(reason => { throw new TypeError(reason); });
         
-        return schema.decode(instanceEncoded).map(instance => new self(instance.toJSON()));
-    }
-    
-    
-    
+        return schema.decode(instanceEncoded)
+            .map((instance : Lang.Model) => new this(instance.toJSON() as RecordT));
+        // return schema.decode(instanceEncoded);
+    }    
     
     
     constructor(value : T) {
@@ -45,14 +57,21 @@ export default abstract class Entity<T extends RecordT> extends Lang.Model {
     }
     
     decode(instanceEncoded : Lang.ModelEncoded) : either.Either<Lang.ValidityReport, Lang.Model> {
-        return either.left('');
+        return either.left('TODO: Entity::decode');
     }
     
     // encode(instance : Model) : ModelEncoded {}
     
     // validate(instance : Model) : either.Either<ValidityReport, Model> {}
     
+    get(propName : keyof T) {
+        return this.value.get(propName);
+    }
+    
     toJSON() {
-        return {};
+        return this.value.toJSON();
     }
 }
+
+// const Entity2 : typeof Entity & { new() : number } = Object.setPrototypeOf(Entity, Object.assign(Object.create(Function.prototype), { foo: 42 }));
+// new Entity2({}).foo;
