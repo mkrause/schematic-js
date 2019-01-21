@@ -16,9 +16,7 @@ Define your schema:
 const User = schematic.model.construct({
     name: String,
 });
-```
 
-```js
 const john = User.construct({
     name: 'John',
 });
