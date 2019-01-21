@@ -12,7 +12,7 @@ import Struct from './lang/constructors/Struct.js';
 const m = {
     Model: Lang.Model,
     
-    Constructor: {
+    Constructors: {
         Model,
         Unit,
         Textual,
@@ -25,6 +25,8 @@ const m = {
     unit: new Unit(),
     text: new Textual(),
 };
+
+export const model = m.model;
 
 export default m;
 

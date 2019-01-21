@@ -1,10 +1,10 @@
 {
-    "name": "@mkrause/model-js",
+    "name": "@mkrause/schematic-js",
     "version": "0.0.0",
     "description": "Data modeling library",
     "author": "mkrause",
     "license": "MIT",
-    "repository": "https://github.com/mkrause/model-js",
+    "repository": "https://github.com/mkrause/schematic-js",
     "es2015": "src/index.js",
     "main": "lib-cjs/index.js",
     "module": "lib-esm/index.js",
@@ -19,7 +19,7 @@
         "repl": "ts-node -O='{\"isolatedModules\":false,\"checkJs\":false,\"module\":\"commonjs\"}'",
         "build:cjs": "NODE_ENV=production BABEL_ENV=cjs babel src --out-dir lib-cjs --source-maps inline --extensions '.ts,.tsx'",
         "build:esm": "NODE_ENV=production BABEL_ENV=esm babel src --out-dir lib-esm --source-maps inline --extensions '.ts,.tsx'",
-        "test": "NODE_ENV=development BABEL_ENV=cjs mocha --require @babel/register --recursive tests",
+        "test": "NODE_ENV=development BABEL_ENV=cjs mocha --require tests/register.js tests/**/*.ts",
         "prepare": "npm run build:esm && npm run build:cjs",
         "prepublishOnly": "npm run build:esm && npm run build:cjs"
     },
@@ -37,8 +37,9 @@
         "ts-node": "^7.0.1",
         "@types/node": "^10.12.18",
         "mocha": "^5.2.0",
+        "@types/mocha": "^5.2.5",
         "chai": "^4.1.2",
-        "sinon": "^5.0.10"
+        "@types/chai": "^4.1.7"
     },
     "dependencies": {
         "message-tag": "^0.2.1",
