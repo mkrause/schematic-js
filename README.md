@@ -1,7 +1,7 @@
 
 # Schematic
 
-A data modeling library for JavaScript. With support for TypeScript.
+A data modeling library for JavaScript. Define your data models using declarative schemas, which can then be used to perform runtime type checking.
 
 
 ## Usage
