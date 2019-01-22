@@ -37,9 +37,9 @@ The `construct` method will either return a valid instance, or throw an error if
 | --------------- | -------------                                       | -------------                             |
 | model           | `schematic.model`                                   | (any valid model)                         |
 | unit            | `{}`                                                | `{}`                                      |
-| text            | `schematic.Constructor.Textual` (or just `String`)  | `"foo"`                                   |
+| text            | `schematic.text` (or: `String`)                     | `"foo"`                                   |
 | text (value)    | `"foo"`                                             | `"foo"`                                   |
-| number          | `schematic.Constructor.Numeric` (or just `Number`)  | `42`                                      |
+| number          | `schematic.number` (or: `Number`)                   | `42`                                      |
 | number (value)  | `42`                                                | `42`                                      |
 | struct          | `{ name: String, score: Number }`                   | `{ name: "foo", score: 42 }`              |
 
