@@ -26,6 +26,8 @@ const alice = User.construct({
     name: 'Alice',
     score: 42,
 });
+
+console.log(alice.get('name')); // 'Alice'
 ```
 
 The `construct` method will either return a valid instance, or throw an error if the data is not valid.
