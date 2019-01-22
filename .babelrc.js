@@ -9,7 +9,6 @@ module.exports = {
         ['@babel/env', {
             targets: {
                 node: '6.9', // LTS (Boron)
-                browsers: ['>0.25%', 'not dead'],
             },
             
             // Whether to transpile modules
@@ -22,8 +21,6 @@ module.exports = {
         }],
     ],
     plugins: [
-        // Note: this may cause issues with `export * from` syntax:
-        // https://github.com/babel/babel-loader/issues/195 (should be fixed in the latest version)
         // 'transform-runtime', // Needed to support generators
         
         ['@babel/proposal-decorators', {
